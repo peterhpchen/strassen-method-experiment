@@ -39,44 +39,62 @@ function matrixMultiplicationStrassen(
   );
   const nextN = currentN / 2;
  
-  const a11 = matrix1Square.slice(0, nextN).map((val) => val.slice(0, nextN));
-  const a12 = matrix1Square.slice(0, nextN).map((val) => val.slice(nextN));
-  const a21 = matrix1Square.slice(nextN).map((val) => val.slice(0, nextN));
-  const a22 = matrix1Square.slice(nextN).map((val) => val.slice(nextN));
-  const b11 = matrix2Square.slice(0, nextN).map((val) => val.slice(0, nextN));
-  const b12 = matrix2Square.slice(0, nextN).map((val) => val.slice(nextN));
-  const b21 = matrix2Square.slice(nextN).map((val) => val.slice(0, nextN));
-  const b22 = matrix2Square.slice(nextN).map((val) => val.slice(nextN));
-  let a11PlusA22 = [...Array(nextN)].map(() => Array(nextN).fill(0));
-  let b11PlusB22 = [...Array(nextN)].map(() => Array(nextN).fill(0));
-  let a21PlusA22 = [...Array(nextN)].map(() => Array(nextN).fill(0));
-  let b12MinusB22 = [...Array(nextN)].map(() => Array(nextN).fill(0));
-  let b21MinusB11 = [...Array(nextN)].map(() => Array(nextN).fill(0));
-  let a11PlusA12 = [...Array(nextN)].map(() => Array(nextN).fill(0));
-  let a21MinusA11 = [...Array(nextN)].map(() => Array(nextN).fill(0));
-  let b11PlusB12 = [...Array(nextN)].map(() => Array(nextN).fill(0));
-  let a12MinusA22 = [...Array(nextN)].map(() => Array(nextN).fill(0));
-  let b21PlusB22 = [...Array(nextN)].map(() => Array(nextN).fill(0));
+const a11 = [];
+  // const a12 = [];
+  // const a21 = [];
+  const a22 = [];
+  const b11 = [];
+  // const b12 = [];
+  // const b21 = [];
+  const b22 = [];
+  const a11PlusA22 = [];
+  const b11PlusB22 = [];
+  const a21PlusA22 = [];
+  const b12MinusB22 = [];
+  const b21MinusB11 = [];
+  const a11PlusA12 = [];
+  const a21MinusA11 = [];
+  const b11PlusB12 = [];
+  const a12MinusA22 = [];
+  const b21PlusB22 = [];
   for (let i = 0; i < nextN; i++) {
-    const a11i = a11[i]
-    const a12i = a12[i]
-    const a21i = a21[i]
-    const a22i = a22[i]
-    const b11i = b11[i]
-    const b12i = b12[i]
-    const b21i = b21[i]
-    const b22i = b22[i]
+    a11.push([]);
+    a22.push([]);
+    b11.push([]);
+    b22.push([]);
+    a11PlusA22.push([]);
+    b11PlusB22.push([]);
+    a21PlusA22.push([]);
+    b12MinusB22.push([]);
+    b21MinusB11.push([]);
+    a11PlusA12.push([]);
+    a21MinusA11.push([]);
+    b11PlusB12.push([]);
+    a12MinusA22.push([]);
+    b21PlusB22.push([]);
+    const matrix1Squarei = matrix1Square[i];
+    const matrix2Squarei = matrix2Square[i];
+    const matrix1SquareinextN = matrix1Square[i + nextN];
+    const matrix2SquareinextN = matrix2Square[i + nextN];
     for (let j = 0; j < nextN; j++) {
-      a11PlusA22[i][j] = a11i[j] + a22i[j];
-      b11PlusB22[i][j] = b11i[j] + b22i[j];
-      a21PlusA22[i][j] = a21i[j] + a22i[j];
-      b12MinusB22[i][j] = b12i[j] - b22i[j];
-      b21MinusB11[i][j] = b21i[j] - b11i[j];
-      a11PlusA12[i][j] = a11i[j] + a12i[j];
-      a21MinusA11[i][j] = a21i[j] - a11i[j];
-      b11PlusB12[i][j] = b11i[j] + b12i[j];
-      a12MinusA22[i][j] = a12i[j] - a22i[j];
-      b21PlusB22[i][j] = b21i[j] + b22i[j];
+      a11[i].push(matrix1Squarei[j]);
+      const a12ij = matrix1Squarei[j + nextN]
+      const a21ij = matrix1SquareinextN[j]
+      a22[i].push(matrix1SquareinextN[j + nextN]);
+      b11[i].push(matrix2Squarei[j]);
+      const b12ij = matrix2Squarei[j + nextN]
+      const b21ij = matrix2SquareinextN[j]
+      b22[i].push(matrix2SquareinextN[j + nextN]);
+      a11PlusA22[i].push(a11[i][j] + a22[i][j]);
+      b11PlusB22[i].push(b11[i][j] + b22[i][j]);
+      a21PlusA22[i].push(a21ij + a22[i][j]);
+      b12MinusB22[i].push(b12ij - b22[i][j]);
+      b21MinusB11[i].push(b21ij - b11[i][j]);
+      a11PlusA12[i].push(a11[i][j] + a12ij);
+      a21MinusA11[i].push(a21ij - a11[i][j]);
+      b11PlusB12[i].push(b11[i][j] + b12ij);
+      a12MinusA22[i].push(a12ij - a22[i][j]);
+      b21PlusB22[i].push(b21ij + b22[i][j]);
     }
   }
 
