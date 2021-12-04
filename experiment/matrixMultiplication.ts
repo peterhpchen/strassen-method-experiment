@@ -31,21 +31,11 @@ function matrixMultiplicationStrassen(
   if (threshold >= currentN)
     return matrixMultiplicationSimple(n, m, p, matrix1, matrix2);
   const result = [...Array(currentN)].map(() => Array(currentN).fill(0));
-  const matrix1Square = [...Array(currentN)].map((_, i) =>
-    [...Array(currentN)].map((_, j) => (i < n && j < m ? matrix1[i][j] : 0))
-  );
-  const matrix2Square = [...Array(currentN)].map((_, j) =>
-    [...Array(currentN)].map((_, k) => (j < m && k < p ? matrix2[j][k] : 0))
-  );
   const nextN = currentN / 2;
- 
-const a11 = [];
-  // const a12 = [];
-  // const a21 = [];
+
+  const a11 = [];
   const a22 = [];
   const b11 = [];
-  // const b12 = [];
-  // const b21 = [];
   const b22 = [];
   const a11PlusA22 = [];
   const b11PlusB22 = [];
@@ -72,40 +62,52 @@ const a11 = [];
     b11PlusB12.push([]);
     a12MinusA22.push([]);
     b21PlusB22.push([]);
-    const matrix1Squarei = matrix1Square[i];
-    const matrix2Squarei = matrix2Square[i];
-    const matrix1SquareinextN = matrix1Square[i + nextN];
-    const matrix2SquareinextN = matrix2Square[i + nextN];
+
+    const matrix1i = matrix1[i] || [];
+    const matrix2i = matrix2[i] || [];
+    const matrix1inextN = matrix1[i + nextN] || [];
+    const matrix2inextN = matrix2[i + nextN] || [];
+    const a11i = a11[i]
+    const a22i = a22[i]
+    const b11i = b11[i]
+    const b22i = b22[i]
+
     for (let j = 0; j < nextN; j++) {
-      a11[i].push(matrix1Squarei[j]);
-      const a12ij = matrix1Squarei[j + nextN]
-      const a21ij = matrix1SquareinextN[j]
-      a22[i].push(matrix1SquareinextN[j + nextN]);
-      b11[i].push(matrix2Squarei[j]);
-      const b12ij = matrix2Squarei[j + nextN]
-      const b21ij = matrix2SquareinextN[j]
-      b22[i].push(matrix2SquareinextN[j + nextN]);
-      a11PlusA22[i].push(a11[i][j] + a22[i][j]);
-      b11PlusB22[i].push(b11[i][j] + b22[i][j]);
-      a21PlusA22[i].push(a21ij + a22[i][j]);
-      b12MinusB22[i].push(b12ij - b22[i][j]);
-      b21MinusB11[i].push(b21ij - b11[i][j]);
-      a11PlusA12[i].push(a11[i][j] + a12ij);
-      a21MinusA11[i].push(a21ij - a11[i][j]);
-      b11PlusB12[i].push(b11[i][j] + b12ij);
-      a12MinusA22[i].push(a12ij - a22[i][j]);
-      b21PlusB22[i].push(b21ij + b22[i][j]);
+      a11i.push(matrix1i[j] || 0);
+      const a12ij = matrix1i[j + nextN] || 0;
+      const a21ij = matrix1inextN[j] || 0;
+      a22i.push(matrix1inextN[j + nextN] || 0);
+      b11i.push(matrix2i[j] || 0);
+      const b12ij = matrix2i[j + nextN] || 0;
+      const b21ij = matrix2inextN[j] || 0;
+      b22i.push(matrix2inextN[j + nextN] || 0);
+
+      const a11ij = a11i[j]
+      const a22ij = a22i[j]
+      const b11ij = b11i[j]
+      const b22ij = b22i[j]
+
+      a11PlusA22[i].push(a11ij + a22ij);
+      b11PlusB22[i].push(b11ij + b22ij);
+      a21PlusA22[i].push(a21ij + a22ij);
+      b12MinusB22[i].push(b12ij - b22ij);
+      b21MinusB11[i].push(b21ij - b11ij);
+      a11PlusA12[i].push(a11ij + a12ij);
+      a21MinusA11[i].push(a21ij - a11ij);
+      b11PlusB12[i].push(b11ij + b12ij);
+      a12MinusA22[i].push(a12ij - a22ij);
+      b21PlusB22[i].push(b21ij + b22ij);
     }
   }
 
-  let m1 = matrixMultiplicationStrassen(
+  const m1 = matrixMultiplicationStrassen(
     nextN,
     nextN,
     nextN,
     a11PlusA22,
     b11PlusB22
   );
-  let m2 = matrixMultiplicationStrassen(
+  const m2 = matrixMultiplicationStrassen(
     nextN,
     nextN,
     nextN,
@@ -113,7 +115,7 @@ const a11 = [];
     b11,
     threshold || 0
   );
-  let m3 = matrixMultiplicationStrassen(
+  const m3 = matrixMultiplicationStrassen(
     nextN,
     nextN,
     nextN,
@@ -121,7 +123,7 @@ const a11 = [];
     b12MinusB22,
     threshold || 0
   );
-  let m4 = matrixMultiplicationStrassen(
+  const m4 = matrixMultiplicationStrassen(
     nextN,
     nextN,
     nextN,
@@ -129,7 +131,7 @@ const a11 = [];
     b21MinusB11,
     threshold || 0
   );
-  let m5 = matrixMultiplicationStrassen(
+  const m5 = matrixMultiplicationStrassen(
     nextN,
     nextN,
     nextN,
@@ -137,14 +139,14 @@ const a11 = [];
     b22,
     threshold || 0
   );
-  let m6 = matrixMultiplicationStrassen(
+  const m6 = matrixMultiplicationStrassen(
     nextN,
     nextN,
     nextN,
     a21MinusA11,
     b11PlusB12
   );
-  let m7 = matrixMultiplicationStrassen(
+  const m7 = matrixMultiplicationStrassen(
     nextN,
     nextN,
     nextN,
