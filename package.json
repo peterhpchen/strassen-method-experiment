@@ -7,7 +7,7 @@
     "prettier": "prettier --write",
     "test": "jest experiment/matrixMultiplication.test.js",
     "execute": "ts-node experiment/matrixMultiplicationExperiment.ts",
-    "show": "http-server ./report"
+    "show": "http-server ./docs"
   },
   "keywords": [],
   "author": "",
