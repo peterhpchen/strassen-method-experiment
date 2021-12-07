@@ -6,15 +6,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="data.js" type="module"></script>
+    <script src="first-try.js" type="module"></script>
+    <!-- <script src="data.js" type="module"></script> -->
   </head>
   <body>
+    <h1>The Strassen Method Threshold Experiment</h1>
+    <h3>Environment</h3>
+    <ul>
+      <li>macOS Monterey</li>
+      <li>1.4 GHz Quad-Core Intel Core i5</li>
+      <li>16 GB 2133 MHz LPDDR3</li>
+      <li>ts-node v10.4.0</li>
+    </ul>
     <div>
-      <canvas id="myChart"></canvas>
+      <canvas id="firstTry"></canvas>
     </div>
-    <script type="module">
-      import data from "./first-try.js";
-      console.log(data);
+    <div>
+      <canvas id="data"></canvas>
+    </div>
+    <script>
       const CHART_COLORS = {
         red: "rgb(255, 99, 132)",
         orange: "rgb(255, 159, 64)",
@@ -32,22 +42,13 @@
         "blue",
         "purple" /*, "grey"*/,
       ];
-      const configData = {
-        ...data,
-        datasets: data.datasets.map((dsu, i) => ({
-          ...dsu,
-          backgroundColor: `${CHART_COLORS[colors[i % colors.length]]}`,
-          borderColor: `${CHART_COLORS[colors[i % colors.length]]}`,
-        })),
-      };
       const config = {
         type: "line",
-        data: configData,
         options: {
           plugins: {
             title: {
               display: true,
-              text: "Strassen Threshold Chart",
+              text: "",
             },
           },
           interaction: {
@@ -72,7 +73,38 @@
           },
         },
       };
-      const myChart = new Chart(document.getElementById("myChart"), config);
     </script>
+<script type="module">
+      import data from "./first-try.js";
+      console.log(data);
+      const configData = {
+        ...data,
+        datasets: data.datasets.map((dsu, i) => ({
+          ...dsu,
+          backgroundColor: `${CHART_COLORS[colors[i % colors.length]]}`,
+          borderColor: `${CHART_COLORS[colors[i % colors.length]]}`,
+        })),
+      };
+      const firstTryConfig = {...config}
+      firstTryConfig.data = configData
+      firstTryConfig.options.plugins.title.text = "First Try"
+      const firstTryChart = new Chart(document.getElementById("firstTry"), firstTryConfig);
+    </script>
+    <!-- <script type="module">
+      import data from "./data.js";
+      console.log(data);
+      const configData = {
+        ...data,
+        datasets: data.datasets.map((dsu, i) => ({
+          ...dsu,
+          backgroundColor: `${CHART_COLORS[colors[i % colors.length]]}`,
+          borderColor: `${CHART_COLORS[colors[i % colors.length]]}`,
+        })),
+      };
+      const dataConfig = {...config}
+      dataConfig.data = configData
+      dataConfig.options.plugins.title.text = "Data"
+      const dataChart = new Chart(document.getElementById("data"), dataConfig);
+    </script> -->
   </body>
 </html>
