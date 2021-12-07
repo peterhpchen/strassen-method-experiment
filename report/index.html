@@ -7,7 +7,7 @@
     <title>Document</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="first-try.js" type="module"></script>
-    <!-- <script src="data.js" type="module"></script> -->
+    <script src="second-try.js" type="module"></script>
   </head>
   <body>
     <h1>The Strassen Method Threshold Experiment</h1>
@@ -74,7 +74,7 @@
         },
       };
     </script>
-<script type="module">
+    <script type="module">
       import data from "./first-try.js";
       console.log(data);
       const configData = {
@@ -85,10 +85,31 @@
           borderColor: `${CHART_COLORS[colors[i % colors.length]]}`,
         })),
       };
-      const firstTryConfig = {...config}
-      firstTryConfig.data = configData
-      firstTryConfig.options.plugins.title.text = "First Try"
-      const firstTryChart = new Chart(document.getElementById("firstTry"), firstTryConfig);
+      const firstTryConfig = { ...config };
+      firstTryConfig.data = configData;
+      firstTryConfig.options.plugins.title.text = "First Try";
+      const firstTryChart = new Chart(
+        document.getElementById("firstTry"),
+        firstTryConfig
+      );
+    </script>
+    <script type="module">
+      import data from "./second-try.js";
+      console.log(data);
+      const configData = {
+        ...data,
+        datasets: data.datasets.map((dsu, i) => ({
+          ...dsu,
+          backgroundColor: `${CHART_COLORS[colors[i % colors.length]]}`,
+          borderColor: `${CHART_COLORS[colors[i % colors.length]]}`,
+        })),
+      };
+      const dataConfig = { ...config };
+      dataConfig.type = "bar";
+      dataConfig.data = configData;
+      dataConfig.options.plugins.title.text = "Second Try";
+      dataConfig.options.scales.x.title.text = "threshold";
+      const dataChart = new Chart(document.getElementById("data"), dataConfig);
     </script>
     <!-- <script type="module">
       import data from "./data.js";
