@@ -1,7 +1,12 @@
 const fs = require("fs");
 const { matrixMultiplicationStrassen } = require("./matrixMultiplication.ts");
-const maxN = 140;
-const gap = 10;
+
+const maxN = 256;
+const gap = 32;
+const round = 10;
+// const maxN = 2048;
+// const gap = 256;
+// const round = 1;
 
 // const simpleStart = performance.now();
 // matrixMultiplicationSimple(n, n, n, matrix1, matrix2);
@@ -13,42 +18,53 @@ const gap = 10;
 // const strassenEnd = performance.now();
 // console.log("Strassen", strassenEnd - strassenStart);
 
-let result = {
-  labels: Array.from(Array(maxN / 10).keys()).map((val) => val * 10),
+const result = {
+  labels: Array.from(Array(maxN / gap).keys()).map((val) => (val + 1) * gap),
   datasets: [],
 };
-[/*"1", "n/4", "n/2","n3/4",*/ "n"].forEach((t, ti) => {
-  result.datasets.push({ label: t, data: [] });
-  for (let n = gap; n <= maxN; n += gap) {
-    const matrix1 = [...Array(n)].map(() =>
-      [...Array(n)].map(() => Math.ceil(Math.random() * 1000))
-    );
-    const matrix2 = [...Array(n)].map(() =>
-      [...Array(n)].map(() => Math.ceil(Math.random() * 1000))
-    );
 
-    let threshold = 1;
-    if (t === "n/4") {
-      threshold = Math.ceil(n / 4);
-    } else if (t === "n/2") {
-      threshold = Math.ceil(n / 2);
-    } else if (t === "n3/4") {
-      threshold = Math.ceil((n * 3) / 4);
-    } else if (t === "n") {
-      threshold = n;
-    }
+for (let n = gap; n <= maxN; n += gap) {
+  // full matrix
+  const matrix1 = [...Array(n)].map(() =>
+    [...Array(n)].map(() => Math.ceil(Math.random() * 1000))
+  );
+  const matrix2 = [...Array(n)].map(() =>
+    [...Array(n)].map(() => Math.ceil(Math.random() * 1000))
+  );
+  // sparse matrix
+  // const matrix1 = [...Array(n)].map((_,i) =>
+  //   [...Array(n)].map((_,j) => j-i===0 ? Math.ceil(Math.random() * 1000) : 0)
+  // );
+  // const matrix2 = [...Array(n)].map((_, i) =>
+  //   [...Array(n)].map((_, j) => j-i===0 ? Math.ceil(Math.random() * 1000) : 0)
+  // );
 
-    let time = 0;
-    let round = 10;
-    for (let i = 0; i < round; i++) {
-      const strassenWithThresholdStart = performance.now();
-      matrixMultiplicationStrassen(n, n, n, matrix1, matrix2, threshold);
-      const strassenWithThresholdEnd = performance.now();
-      time += strassenWithThresholdEnd - strassenWithThresholdStart;
-    }
-    result.datasets[ti].data.push(time / round);
-    console.log(`${t}-${n}-${time / round}`);
-  }
-});
+  // ["1", "n/64", "n/32", "n/16", "n/8", "n/4", "n/2", "n"].forEach((t, ti) => {
+  Array.from(Array(maxN / gap + 1).keys())
+    .map((val) => val * gap || 1)
+    .forEach((t, ti) => {
+      if (!result.datasets.some((ds) => ds.label === t))
+        result.datasets.push({ label: t, data: [] });
+
+      let threshold = t;
+      // if (t === "n") {
+      //   threshold = n
+      // } else if (t === "1") {
+      //   threshold = 1
+      // } else {
+      //   threshold = parseInt(t.slice(2))
+      // }
+
+      let time = 0;
+      for (let i = 0; i < round; i++) {
+        const strassenWithThresholdStart = performance.now();
+        matrixMultiplicationStrassen(n, n, n, matrix1, matrix2, threshold);
+        const strassenWithThresholdEnd = performance.now();
+        time += strassenWithThresholdEnd - strassenWithThresholdStart;
+      }
+      result.datasets[ti].data.push(time / round);
+      console.log(`${t}-${threshold}-${n}-${time / round}`);
+    });
+}
 
 fs.writeFileSync("report/data.js", `export default ${JSON.stringify(result)}`);

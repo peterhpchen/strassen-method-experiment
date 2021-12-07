@@ -126,8 +126,8 @@ function matrixMultiplicationStrassen(
   if (n === 1 && m === 1 && p === 1) return [[matrix1[0][0] * matrix2[0][0]]];
   const currentN = n > p ? (n % 2 === 0 ? n : n + 1) : p % 2 === 0 ? p : p + 1;
   if (threshold >= currentN) {
-    // return matrixMultiplicationSimple(n, m, p, matrix1, matrix2);
-    return matrixMultiplicationTypical(n, m, p, matrix1, matrix2);
+    return matrixMultiplicationSimple(n, m, p, matrix1, matrix2);
+    // return matrixMultiplicationTypical(n, m, p, matrix1, matrix2);
   }
   const result = [...Array(n)].map(() => Array(p).fill(0));
   const nextN = currentN / 2;
@@ -204,7 +204,8 @@ function matrixMultiplicationStrassen(
     nextN,
     nextN,
     a11PlusA22,
-    b11PlusB22
+    b11PlusB22,
+    threshold || 0
   );
   const m2 = matrixMultiplicationStrassen(
     nextN,
@@ -243,14 +244,16 @@ function matrixMultiplicationStrassen(
     nextN,
     nextN,
     a21MinusA11,
-    b11PlusB12
+    b11PlusB12,
+    threshold || 0
   );
   const m7 = matrixMultiplicationStrassen(
     nextN,
     nextN,
     nextN,
     a12MinusA22,
-    b21PlusB22
+    b21PlusB22,
+    threshold || 0
   );
 
   for (let i = 0; i < nextN; i++) {

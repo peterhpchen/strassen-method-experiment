@@ -13,23 +13,64 @@
       <canvas id="myChart"></canvas>
     </div>
     <script type="module">
-      import data from "./data.js";
+      import data from "./first-try.js";
       console.log(data);
+      const CHART_COLORS = {
+        red: "rgb(255, 99, 132)",
+        orange: "rgb(255, 159, 64)",
+        yellow: "rgb(255, 205, 86)",
+        green: "rgb(75, 192, 192)",
+        blue: "rgb(54, 162, 235)",
+        purple: "rgb(153, 102, 255)",
+        grey: "rgb(201, 203, 207)",
+      };
+      const colors = [
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "blue",
+        "purple" /*, "grey"*/,
+      ];
       const configData = {
         ...data,
-        datasets: data.datasets.map((dsu) => ({
+        datasets: data.datasets.map((dsu, i) => ({
           ...dsu,
-          backgroundColor: `rgb(${Math.floor(
-            Math.random() * 255
-          )}, ${Math.floor(Math.random() * 255)}, ${Math.floor(
-            Math.random() * 255
-          )})`,
+          backgroundColor: `${CHART_COLORS[colors[i % colors.length]]}`,
+          borderColor: `${CHART_COLORS[colors[i % colors.length]]}`,
         })),
       };
       const config = {
         type: "line",
         data: configData,
-        options: {},
+        options: {
+          plugins: {
+            title: {
+              display: true,
+              text: "Strassen Threshold Chart",
+            },
+          },
+          interaction: {
+            mode: "index",
+            intersect: false,
+          },
+          scales: {
+            x: {
+              display: true,
+              title: {
+                display: true,
+                text: "n",
+              },
+            },
+            y: {
+              display: true,
+              title: {
+                display: true,
+                text: "ms",
+              },
+            },
+          },
+        },
       };
       const myChart = new Chart(document.getElementById("myChart"), config);
     </script>
