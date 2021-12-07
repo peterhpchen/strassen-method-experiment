@@ -8,9 +8,10 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="first-try.js" type="module"></script>
     <script src="second-try.js" type="module"></script>
+    <script src="third-try.js" type="module"></script>
   </head>
   <body>
-    <h1>The Strassen Method Threshold Experiment</h1>
+    <h1>The Strassen's Method Threshold Experiment</h1>
     <h3>Environment</h3>
     <ul>
       <li>macOS Monterey</li>
@@ -22,7 +23,10 @@
       <canvas id="firstTry"></canvas>
     </div>
     <div>
-      <canvas id="data"></canvas>
+      <canvas id="secondTry"></canvas>
+    </div>
+    <div>
+      <canvas id="thirdTry"></canvas>
     </div>
     <script>
       const CHART_COLORS = {
@@ -109,10 +113,13 @@
       dataConfig.data = configData;
       dataConfig.options.plugins.title.text = "Second Try";
       dataConfig.options.scales.x.title.text = "threshold";
-      const dataChart = new Chart(document.getElementById("data"), dataConfig);
+      const dataChart = new Chart(
+        document.getElementById("secondTry"),
+        dataConfig
+      );
     </script>
-    <!-- <script type="module">
-      import data from "./data.js";
+    <script type="module">
+      import data from "./third-try.js";
       console.log(data);
       const configData = {
         ...data,
@@ -122,10 +129,15 @@
           borderColor: `${CHART_COLORS[colors[i % colors.length]]}`,
         })),
       };
-      const dataConfig = {...config}
-      dataConfig.data = configData
-      dataConfig.options.plugins.title.text = "Data"
-      const dataChart = new Chart(document.getElementById("data"), dataConfig);
-    </script> -->
+      const dataConfig = { ...config };
+      dataConfig.type = "bar";
+      dataConfig.data = configData;
+      dataConfig.options.plugins.title.text = "Third Try";
+      dataConfig.options.scales.x.title.text = "threshold";
+      const dataChart = new Chart(
+        document.getElementById("thirdTry"),
+        dataConfig
+      );
+    </script>
   </body>
 </html>

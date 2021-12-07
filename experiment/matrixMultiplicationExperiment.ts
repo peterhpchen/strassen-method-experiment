@@ -121,5 +121,44 @@ function secondTry() {
   );
 }
 
+function thirdTry() {
+  const round = 10;
+  const nList = [256, 384, 512, 768, 896];
+  const tList = [16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112];
+  const result = {
+    labels: tList,
+    datasets: [],
+  };
+  nList.forEach((n, ni) => {
+    // full matrix
+    const matrix1 = [...Array(n)].map(() =>
+      [...Array(n)].map(() => Math.ceil(Math.random() * 1000))
+    );
+    const matrix2 = [...Array(n)].map(() =>
+      [...Array(n)].map(() => Math.ceil(Math.random() * 1000))
+    );
+    result.datasets.push({ label: n, data: [] });
+    tList.forEach((t) => {
+      let threshold = t;
+
+      let time = 0;
+      for (let i = 0; i < round; i++) {
+        const strassenWithThresholdStart = performance.now();
+        matrixMultiplicationStrassen(n, n, n, matrix1, matrix2, threshold);
+        const strassenWithThresholdEnd = performance.now();
+        time += strassenWithThresholdEnd - strassenWithThresholdStart;
+      }
+      result.datasets[ni].data.push(time / round);
+      console.log(`${t}-${threshold}-${n}-${time / round}`);
+    });
+
+    fs.writeFileSync(
+      "report/third-try.js",
+      `export default ${JSON.stringify(result)}`
+    );
+  });
+}
+
 // firstTry()
-secondTry();
+// secondTry();
+// thirdTry();
